@@ -1,0 +1,67 @@
+% https://tex.stackexchange.com/a/544451
+\RequirePackage{xparse}
+\RequirePackage{etoolbox}
+\RequirePackage{graphicx}  % \reflectbox
+
+\RequirePackage{mathtools} % \mathrlap
+\RequirePackage{turnstile} % turnstiles
+
+
+\let\oldm@dels\models      % standard |= symbol
+\newlength{\m@delsheight}
+\newcommand{\@resize}{\setlength{\m@delsheight}{\heightof{X} * \real{.95}}}
+\newsavebox{\notModelsb@x}
+
+
+% \models |-
+\RenewDocumentCommand{\models}{O{{}} O{{}}}{%
+  %\settoheight{\m@delsheight}{$A$}%{$\mathmbox{\oldm@dels}$}%
+  \@resize%
+  \ensuremath{%
+    \mathrel{%
+      \resizebox{!}{\m@delsheight}{%
+        $\sststile{\mathrm{#1}}{\mathrm{#2}}$%
+      }%
+    }%
+  }%
+}
+
+% \Models |=
+\NewDocumentCommand{\Models}{O{{}} O{{}}}{%
+  \@resize%
+  \ensuremath{%
+    \mathrel{%
+      \resizebox{!}{\m@delsheight}{%
+        $\sdtstile{\mathrm{#1}}{\mathrm{#2}}$%
+      }%
+    }%
+  }%
+}
+
+% \bimodels -||-
+\newcommand{\bimodels}{%
+  \ensuremath{%
+    \mathrel{%
+      \reflectbox{\models}\,{\models}%
+    }%
+  }%
+}
+
+% \biModels =||=
+\newcommand{\biModels}{%
+  \ensuremath{%
+    \mathrel{%
+      \reflectbox{\Models}\,{\Models}%
+    }%
+  }%
+}
+
+% \notModels |=/=
+\NewDocumentCommand{\notModels}{O{{}} O{{}}}{%
+  \sbox{\notModelsb@x}{\Models[#1][#2]}%
+  \ensuremath{%
+    \mathrel{%
+      \mathmakebox[\wd\notModelsb@x][r]{\not\usebox{\notModelsb@x}}%
+    }%
+  }%
+}
