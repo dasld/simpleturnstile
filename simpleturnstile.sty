@@ -10,6 +10,7 @@
 \let\oldm@dels\models      % standard |= symbol
 \newlength{\m@delsheight}
 \newcommand{\@resize}{\setlength{\m@delsheight}{\heightof{X} * \real{.95}}}
+\newsavebox{\notmodelsb@x}
 \newsavebox{\notModelsb@x}
 
 
@@ -52,6 +53,16 @@
   \ensuremath{%
     \mathrel{%
       \reflectbox{\Models}\,{\Models}%
+    }%
+  }%
+}
+
+% \notmodels |-/-
+\NewDocumentCommand{\notmodels}{O{{}} O{{}}}{%
+  \sbox{\notmodelsb@x}{\models[#1][#2]}%
+  \ensuremath{%
+    \mathrel{%
+      \mathmakebox[\wd\notmodelsb@x][r]{\not\usebox{\notmodelsb@x}}%
     }%
   }%
 }
